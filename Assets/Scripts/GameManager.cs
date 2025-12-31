@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
   [System.Serializable]
   public class ScoreData {
     public string UserName = "Name";
-    public int HighScore = 0;
+    public int Score = 0;
   }
 
   [System.Serializable]
@@ -39,13 +39,16 @@ public class GameManager : MonoBehaviour {
 
   public void SaveHighScore() {
     TopScores currentScores = LoadListFromFile();
-    // HighScore = LastScore;
-    // HighScoreUserName = UserName;
     ScoreData data = new ScoreData();
-    // data.UserName = HighScoreUserName;
-    // data.HighScore = HighScore;
-    data.UserName = UserName;
-    data.HighScore = LastScore;
+    if (LastScore > HighScore) {
+      HighScore = LastScore;
+      HighScoreUserName = UserName;
+      data.UserName = HighScoreUserName;
+      data.Score = HighScore;
+    } else {
+      data.UserName = UserName;
+      data.Score = LastScore;
+    }
 
     AddScoreToListAndSave(currentScores, data);
   }
@@ -53,14 +56,15 @@ public class GameManager : MonoBehaviour {
   public void LoadHighScore() {
     TopScores currentScores = LoadListFromFile();
     List<ScoreData> scores = currentScores.scores;
-    int lastIndex = scores.Count - 1;
-    HighScoreUserName = scores[lastIndex].UserName;
-    HighScore = scores[lastIndex].HighScore;
+    List<ScoreData> sortedScores = scores.OrderByDescending(s => s.Score).ToList();
+
+    HighScoreUserName = sortedScores[0].UserName;
+    HighScore = sortedScores[0].Score;
   }
 
   public void AddScoreToListAndSave(TopScores topScores, ScoreData newScore) {
     topScores.scores.Add(newScore);
-    topScores.scores.OrderByDescending(s => s.HighScore);
+    topScores.scores.OrderByDescending(s => s.Score);
     SaveListToFile(topScores);
   }
 

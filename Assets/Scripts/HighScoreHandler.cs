@@ -13,10 +13,10 @@ public class HighScoreHandler : MonoBehaviour {
     scoreList.text = "";
     int count = 1;
     topScores = GameManager.Instance.LoadListFromFile();
-    List<GameManager.ScoreData> sortedScores = topScores.scores.OrderByDescending(s => s.HighScore).ToList();
+    List<GameManager.ScoreData> sortedScores = topScores.scores.OrderByDescending(s => s.Score).ToList();
     for (int i = 0; i < sortedScores.Count; i++) {
       if (count <= 10) {
-        scoreList.text += $"{count}.  {sortedScores[i].UserName} -- {sortedScores[i].HighScore}\n";
+        scoreList.text += $"{count}.  {sortedScores[i].UserName} -- {sortedScores[i].Score}\n";
         count++;
       } else {
         break;
